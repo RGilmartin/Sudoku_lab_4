@@ -416,14 +416,37 @@ public class Sudoku extends LatinSquare {
 	}
 	
 	private boolean fillRemaining(int iRow, int iCol) {
-		
-		if (iRow == iSize) {
-			
+		int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+		shuffleArray(values);
+		boolean working = false;
+		if (super.getLatinSquare()[iRow][iCol] == 0) {
+			for (int num : values) {
+				if (isValidValue(iRow, iCol, num)) {
+					super.getLatinSquare()[iRow][iCol] = num;
+					if (iRow + 1 == iSize && iCol + 1 == iSize) {
+						working = true;
+						break;
+					}
+					else if (iRow + 1 < iSize && iCol + 1 == iSize) {
+						fillRemaining(iRow + 1, 0);
+					}
+					else if (iRow < iSize && iCol + 1 < iSize) {
+						fillRemaining(iRow, iCol + 1);
+					}
+				}
+			}
 		}
-		else if (iCol + 1 > iSize && iRow < iSize) {
-			fillRemaining(iRow + 1, 0);
+		else if (super.getLatinSquare()[iRow][iCol] != 0) {
+			if (iRow + 1 == iSize && iCol + 1 == iSize) {
+				working = true;
+			}
+			else if (iRow + 1 < iSize && iCol + 1 == iSize) {
+				fillRemaining(iRow + 1, 0);
+			}
+			else if (iRow < iSize && iCol + 1 < iSize) {
+				fillRemaining(iRow, iCol + 1);
+			}
 		}
-		
-		return false;
+		return working;
 	}
 }
